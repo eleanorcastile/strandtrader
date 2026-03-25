@@ -1,0 +1,18 @@
+{
+  "positions": {
+    "KEFI.L": {
+      "qty": 200,
+      "entry_price": 1.1,
+      "date_added": "2026-03-24T09:45:00+11:00",
+      "notes": "Test position - Kefi Gold"
+    },
+    "QED.L": {
+      "qty": 100,
+      "entry_price": 1.95,
+      "date_added": "2026-03-24T09:45:00+11:00",
+      "notes": "Quadrise - energy catalyst"
+    }
+  },
+  "cash": 50000.0,
+  "currency": "GBP"
+}
