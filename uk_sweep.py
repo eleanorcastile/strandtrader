@@ -261,9 +261,10 @@ def scan_ticker(ticker):
     }
 
 
-def scan_watchlist(tickers, max_workers=10):
+def scan_watchlist(tickers, max_workers=3):
     """
     Scan all watchlist tickers. Returns sorted list of candidates.
+    Slow rate: 3 parallel workers, 0.5s delay to avoid Yahoo Finance throttling.
     """
     from concurrent.futures import ThreadPoolExecutor
 
@@ -276,11 +277,11 @@ def scan_watchlist(tickers, max_workers=10):
         for f in futures:
             r = f.result()
             done += 1
-            if done % 50 == 0:
+            if done % 25 == 0:
                 print(f"  Scanned {done}/{total}...")
             if r:
                 results.append(r)
-            time.sleep(0.15)  # rate limit to avoid Yahoo Finance throttling
+            time.sleep(0.5)  # 0.5s per ticker — keeps us well under Yahoo rate limits
 
     results.sort(key=lambda x: x["score"], reverse=True)
     return results
