@@ -8,8 +8,35 @@
       "score": 8,
       "category": "trading_update",
       "thesis": "trading_update (profit)"
+    },
+    "IPO.L": {
+      "qty": 4,
+      "entry_price": 54.79999923706055,
+      "date_added": "2026-03-25T22:28:45.409628",
+      "stop": 46.58,
+      "score": 8,
+      "category": "trading_update",
+      "thesis": "trading_update (full year)"
+    },
+    "FSFL.L": {
+      "qty": 4,
+      "entry_price": 61.679901123046875,
+      "date_added": "2026-03-25T22:28:45.409628",
+      "stop": 52.428,
+      "score": 8,
+      "category": "trading_update",
+      "thesis": "trading_update (full year)"
+    },
+    "ORIT.L": {
+      "qty": 4,
+      "entry_price": 57.70000076293945,
+      "date_added": "2026-03-25T22:28:45.409628",
+      "stop": 49.045,
+      "score": 6,
+      "category": "trading_update",
+      "thesis": "trading_update (annual results)"
     }
   },
-  "cash": 49781.0,
+  "cash": 49084.28,
   "currency": "GBP"
 }
