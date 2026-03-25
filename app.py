@@ -13,7 +13,7 @@ def get_fx():
         g = yf.Ticker("GBPAUD=X").history(period="1d", interval="1d")
         audusd = float(a.iloc[-1]["Close"]) if not a.empty else 0.77
         gbpaud = float(g.iloc[-1]["Close"]) if not g.empty else 0.52
-        return round(1/audusd, 4), round(1/gbpaud, 4)
+        return round(1/audusd, 4), round(gbpaud, 4)  # usd→aud, gbp→aud
     except:
         return 1.56, 1.92
 
