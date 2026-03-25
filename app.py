@@ -57,42 +57,64 @@ def row_html(p, currency="$", is_closed=False):
     pnl = p["pnl"]
     pnl_color = "#2ecc71" if pnl >= 0 else "#e74c3c"
     pnl_sign = "+" if pnl >= 0 else ""
-    day_color = "#2ecc71" if p["day"] >= 0 else "#e74c3c"
-    pnl_pct_color = "#2ecc71" if p["pnl_pct"] >= 0 else "#e74c3c"
-    if pnl > 0:
-        arrow = '<span style="color:#2ecc71;font-weight:bold">&#9650;</span>'
-    elif pnl < 0:
-        arrow = '<span style="color:#e74c3c;font-weight:bold">&#9660;</span>'
-    else:
-        arrow = '<span style="color:#e6edf3">&#9654;</span>'
+    day_val = p.get("day") if not is_closed else 0
+    day_color = "#2ecc71" if day_val >= 0 else "#e74c3c" if day_val else "#e6edf3"
+    pnl_pct = p.get("pnl_pct", 0)
+    pnl_pct_color = "#2ecc71" if pnl_pct >= 0 else "#e74c3c"
     if is_closed:
         emoji = "&#128994;" if pnl > 0 else "&#128308;" if pnl < 0 else "&#9898;"
         row_class = " class='closed-row'"
     else:
-        emoji = arrow
+        emoji = ('<span style="color:#2ecc71;font-weight:bold">&#9650;</span>' if pnl > 0
+                 else '<span style="color:#e74c3c;font-weight:bold">&#9660;</span>' if pnl < 0
+                 else '<span style="color:#e6edf3">&#9654;</span>')
         row_class = ""
-    closed = p.get("closed_date","") if is_closed else "&#8212;"
-    opened = p.get("date", "") or "&#8212;"
+    current_or_exit = p.get("current") if not is_closed else p.get("exit", 0)
+    value_or_proc = p.get("value") if not is_closed else p.get("proceeds", 0)
     return (
         f"<tr{row_class}>"
         f"<td>{emoji} <strong>{p['ticker']}</strong></td>"
-        f"<td>{p['qty']}</td>"
+        f"<td>{p.get('qty', 0)}</td>"
         f"<td>{currency}{p['entry']:.2f}</td>"
-        f"<td>{currency}{p['current']:.2f}</td>"
-        f"<td>{currency}{p['cost']:.2f}</td>"
-        f"<td>{currency}{p['value']:.2f}</td>"
+        f"<td>{currency}{(current_or_exit or 0):.2f}</td>"
+        f"<td>{currency}{p.get('cost', 0):.2f}</td>"
+        f"<td>{currency}{(value_or_proc or 0):.2f}</td>"
         f"<td style='color:{pnl_color}'><strong>{pnl_sign}{pnl:.2f}</strong></td>"
-        f"<td style='color:{pnl_pct_color}'>{p['pnl_pct']:.1f}%</td>"
-        f"<td style='color:{day_color}'>{p['day']:.1f}%</td>"
-        f"<td>{opened}</td>"
-        f"<td>{closed}</td>"
+        f"<td style='color:{pnl_pct_color}'>{pnl_pct:.1f}%</td>"
+        f"<td style='color:{day_color}'>{p.get('day', 0):.1f}%</td>"
+        f"<td>{p.get('date', '') or '—'}</td>"
+        f"<td>{p.get('closed_date', '') or '—'}</td>"
+        f"</tr>"
+    )
+
+def closed_row(trade, currency="$"):
+    t = trade
+    pnl = t.get("pnl", 0)
+    pnl_color = "#2ecc71" if pnl >= 0 else "#e74c3c"
+    pnl_sign = "+" if pnl >= 0 else ""
+    pnl_pct = t.get("pnl_pct", 0)
+    pnl_pct_color = "#2ecc71" if pnl_pct >= 0 else "#e74c3c"
+    emoji = "&#128994;" if pnl > 0 else "&#128308;" if pnl < 0 else "&#9898;"
+    return (
+        f"<tr class='closed-row'>"
+        f"<td>{emoji} <strong>{t.get('ticker','')}</strong></td>"
+        f"<td>{t.get('qty', 0)}</td>"
+        f"<td>{currency}{t.get('entry_price', t.get('entry', 0)):.2f}</td>"
+        f"<td>{currency}{t.get('exit_price', t.get('exit', 0)):.2f}</td>"
+        f"<td>{currency}{t.get('cost_basis', t.get('cost', 0)):.2f}</td>"
+        f"<td>{currency}{t.get('proceeds', 0):.2f}</td>"
+        f"<td style='color:{pnl_color}'><strong>{pnl_sign}{pnl:.2f}</strong></td>"
+        f"<td style='color:{pnl_pct_color}'>{pnl_pct:.1f}%</td>"
+        f"<td style='color:#e6edf3'>—</td>"
+        f"<td>{t.get('opened', '—')}</td>"
+        f"<td>{t.get('closed', '—')}</td>"
         f"</tr>"
     )
 
 def closed_rows(trades, currency="$"):
     if not trades:
         return "<tr><td colspan='11' style='color:#8b949e;text-align:center;padding:20px'>No closed trades</td></tr>"
-    return "".join(row_html(t, currency=currency, is_closed=True) for t in trades)
+    return "".join(closed_row(t, currency) for t in trades)
 
 def open_rows(positions, currency="$"):
     if not positions:
