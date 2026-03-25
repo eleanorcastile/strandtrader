@@ -356,7 +356,6 @@ def run_sweep():
     history = load_history()
 
     open_tickers = set(portfolio.get("positions", {}).keys())
-    max_new = MAX_ORDERS_PER_RUN - len(open_tickers)
 
     print(f"\n📊 CANDIDATES (score >= 6)")
     print(f"{'Ticker':8} {'Score':5} {'Cat':15} {'Price':8} {'Day%':6} {'VolR':5} {'Headline'}")
@@ -377,9 +376,9 @@ def run_sweep():
 
     # Filter to new positions only
     new_candidates = [c for c in candidates if not already_held(c["ticker"], portfolio)]
-    buys = new_candidates[:max_new]
+    buys = new_candidates  # no cap — all qualifying signals get filled
 
-    print(f"\n📋 ORDERS (new positions only, max {MAX_ORDERS_PER_RUN})")
+    print(f"\n📋 ORDERS (all new signals, cash permitting)")
     if not buys:
         print("No new signals.")
     else:
