@@ -4,6 +4,32 @@
       "ticker": "KEFI.L",
       "qty": 200,
       "entry_price": 1.1,
+      "exit_price": 1.12,
+      "opened": "2026-03-24T09:45:00+11:00",
+      "closed": "2026-03-25T09:00:00+11:00",
+      "cost_basis": 220.0,
+      "proceeds": 224.0,
+      "pnl": 4.0,
+      "pnl_pct": 1.82,
+      "reason": "Manual close - test position cleared"
+    },
+    {
+      "ticker": "QED.L",
+      "qty": 100,
+      "entry_price": 1.95,
+      "exit_price": 2.0,
+      "opened": "2026-03-24T09:45:00+11:00",
+      "closed": "2026-03-25T09:00:00+11:00",
+      "cost_basis": 195.0,
+      "proceeds": 200.0,
+      "pnl": 5.0,
+      "pnl_pct": 2.56,
+      "reason": "Manual close - test position cleared"
+    },
+    {
+      "ticker": "KEFI.L",
+      "qty": 200,
+      "entry_price": 1.1,
       "exit_price": 1.18,
       "opened": "2026-03-23T09:00:00+11:00",
       "closed": "2026-03-24T16:30:00+11:00",
@@ -11,7 +37,7 @@
       "proceeds": 236.0,
       "pnl": 16.0,
       "pnl_pct": 7.27,
-      "reason": "8-K drift \u2014 5 day hold"
+      "reason": "8-K drift — 5 day hold"
     },
     {
       "ticker": "QED.L",
@@ -24,7 +50,7 @@
       "proceeds": 207.0,
       "pnl": 12.0,
       "pnl_pct": 6.15,
-      "reason": "8-K drift \u2014 5 day hold"
+      "reason": "8-K drift — 5 day hold"
     },
     {
       "ticker": "MBO.L",
@@ -37,7 +63,7 @@
       "proceeds": 405.0,
       "pnl": 45.0,
       "pnl_pct": 12.5,
-      "reason": "8-K Item 1.01 \u2014 acquisition announcement"
+      "reason": "8-K Item 1.01 — acquisition announcement"
     },
     {
       "ticker": "SBTX.L",
@@ -50,12 +76,12 @@
       "proceeds": 273.0,
       "pnl": -42.0,
       "pnl_pct": -13.33,
-      "reason": "Stop-loss triggered \u2014 adverse reaction to filing"
+      "reason": "Stop-loss triggered — adverse reaction to filing"
     }
   ],
   "summary": {
-    "wins": 3,
+    "wins": 5,
     "losses": 1,
-    "total_pnl": 31.0
+    "total_pnl": 40.0
   }
 }
