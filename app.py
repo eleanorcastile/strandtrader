@@ -200,8 +200,8 @@ def index():
     html = html.replace("{{uk_wr}}", "{}% ({}W / {}L)".format(uk_wr_pct, kw, kl))
     html = html.replace("{{uk_wr_color}}", "#2ecc71" if uk_wr_pct >= 50 else ("#e74c3c" if (kw+kl) > 0 else "#e6edf3"))
 
-    html = html.replace("{{us_open_rows}}", open_rows(us_enr, "$"))
-    html = html.replace("{{uk_open_rows}}", open_rows(uk_enr, "\u00a3"))
+    html = html.replace("{{us_open_rows}}", open_rows(sorted(us_enr, key=lambda p: p["pnl"], reverse=True), "$"))
+    html = html.replace("{{uk_open_rows}}", open_rows(sorted(uk_enr, key=lambda p: p["pnl"], reverse=True), "\u00a3"))
     html = html.replace("{{us_closed_rows}}", closed_rows(us_history.get("trades", []), "$"))
     html = html.replace("{{uk_closed_rows}}", closed_rows(uk_history.get("trades", []), "\u00a3"))
 
