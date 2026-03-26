@@ -75,6 +75,8 @@ def load_json(name, fallback=None):
 
 def fmt_money(val, currency="$", pnl=False):
     """Format money: prices/amounts show $50.00 (no +). P&L shows +$50.00 / -$50.00."""
+    if abs(val) < 0.005:
+        val = 0.0
     if val < 0:
         return f"-{currency}{abs(val):,.2f}"
     if pnl and val > 0:
@@ -83,6 +85,8 @@ def fmt_money(val, currency="$", pnl=False):
 
 def fmt_pct(val, pnl=False):
     """Format percentage: day% shows 5.2%. P&L% shows +5.2% / -5.2%."""
+    if abs(val) < 0.05:
+        val = 0.0
     if val < 0:
         return f"-{abs(val):,.1f}%"
     if pnl and val > 0:
