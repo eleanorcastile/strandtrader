@@ -47,8 +47,28 @@
       "score": 1.0,
       "category": "8-k",
       "thesis": "8-K items: 5.02 | item=5 surprise=0 vol=7,144,380"
+    },
+    "TTEK": {
+      "ticker": "TTEK",
+      "qty": 8,
+      "entry_price": 30.41,
+      "date_added": "2026-03-27T08:01:55.069577+11:00",
+      "stop": 25.85,
+      "score": 1.4,
+      "category": "8-k",
+      "thesis": "8-K items: 5.02 | item=5 surprise=2 vol=3,121,456"
+    },
+    "VTS": {
+      "ticker": "VTS",
+      "qty": 12,
+      "entry_price": 19.43,
+      "date_added": "2026-03-27T08:01:55.074088+11:00",
+      "stop": 16.52,
+      "score": 1.2,
+      "category": "8-k",
+      "thesis": "8-K items: 5.02 | item=5 surprise=1 vol=594,820"
     }
   },
-  "cash": 48595.22005075455,
+  "cash": 48118.7800464058,
   "currency": "USD"
 }
