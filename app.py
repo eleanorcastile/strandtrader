@@ -15,7 +15,7 @@ def get_fx():
         audusd = float(a.iloc[-1]["Close"]) if not a.empty else 0.77
         gbpaud = float(g.iloc[-1]["Close"]) if not g.empty else 0.52
         # GBPAUD = price of 1 AUD in GBP. GBP to AUD = 1 / GBPAUD
-        return round(1/audusd, 4), round(1/gbpaud, 4)
+        return round(1/audusd, 4), round(gbpaud, 4)
     except:
         return 1.30, 1.92  # fallback: USD→AUD, GBP→AUD
         return 1.56, 1.92
