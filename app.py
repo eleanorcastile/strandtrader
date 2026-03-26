@@ -76,7 +76,7 @@ def load_json(name, fallback=None):
 def open_row(p, currency="$"):
     pnl = p["pnl"]
     pnl_color = "#2ecc71" if pnl > 0 else "#e74c3c"
-    pnl_sign = "+" if pnl > 0 else ""
+    
     day_val = p.get("day", 0)
     day_color = "#2ecc71" if day_val > 0 else ("#e74c3c" if day_val < 0 else "#8b949e")
     pnl_pct = p.get("pnl_pct", 0)
@@ -95,7 +95,7 @@ def open_row(p, currency="$"):
         f"<td>{currency}{p['current']:.2f}</td>"
         f"<td>{currency}{p['cost']:.2f}</td>"
         f"<td>{currency}{p['value']:.2f}</td>"
-        f"<td style='color:{pnl_color}'><strong>{pnl_sign}{pnl:.2f}</strong></td>"
+        f"<td style='color:{pnl_color}'><strong>{pnl:.2f}</strong></td>"
         f"<td style='color:{pnl_pct_color}'>{pnl_pct:.1f}%</td>"
         f"<td style='color:{day_color}'>{day_val:.1f}%</td>"
         f"<td>{fmt_date(p.get('date', ''))}</td>"
@@ -107,7 +107,7 @@ def closed_row(trade, currency="$"):
     t = trade
     pnl = t.get("pnl", 0)
     pnl_color = "#2ecc71" if pnl > 0 else "#e74c3c"
-    pnl_sign = "+" if pnl > 0 else ""
+    
     pnl_pct = t.get("pnl_pct", 0)
     pnl_pct_color = "#2ecc71" if pnl_pct > 0 else "#e74c3c"
     emoji = "&#128994;" if pnl > 0 else "&#128308;" if pnl < 0 else "&#9898;"
@@ -119,7 +119,7 @@ def closed_row(trade, currency="$"):
         f"<td>{currency}{t.get('exit_price', t.get('exit', 0)):.2f}</td>"
         f"<td>{currency}{t.get('cost_basis', t.get('cost', 0)):.2f}</td>"
         f"<td>{currency}{t.get('proceeds', 0):.2f}</td>"
-        f"<td style='color:{pnl_color}'><strong>{pnl_sign}{pnl:.2f}</strong></td>"
+        f"<td style='color:{pnl_color}'><strong>{pnl:.2f}</strong></td>"
         f"<td style='color:{pnl_pct_color}'>{pnl_pct:.1f}%</td>"
         f"<td style='color:#e6edf3'>—</td>"
         f"<td>{fmt_date(t.get('opened', ''))}</td>"
@@ -172,7 +172,7 @@ def index():
     html = html.replace("{{timestamp}}", ts)
     html = html.replace("{{comb_deployed}}", "AUD {:,.0f}".format(total_deployed))
     html = html.replace("{{comb_pnl}}", "AUD {:,.2f}".format(total_pnl))
-    html = html.replace("{{comb_ret}}", "{:+.1f}%".format(total_ret))
+    html = html.replace("{{comb_ret}}", "{:,.1f}%".format(total_ret))
     html = html.replace("{{comb_wr}}", "{}% ({}W / {}L)".format(wr_pct, tw, tl))
     html = html.replace("{{comb_pnl_color}}", "#2ecc71" if total_pnl >= 0 else "#e74c3c")
     html = html.replace("{{comb_ret_color}}", "#2ecc71" if total_ret >= 0 else "#e74c3c")
@@ -182,10 +182,10 @@ def index():
     us_wr_pct = round(uw / (uw + ul) * 100) if (uw + ul) > 0 else 0
     html = html.replace("{{us_cash}}", "USD {:,.2f}".format(50000 - us_deployed))
     html = html.replace("{{us_deployed}}", "USD {:,.2f}".format(us_deployed))
-    html = html.replace("{{us_upnl}}", "USD {:+,.2f} ({:+.1f}%)".format(us_upnl, us_upnl_pct))
+    html = html.replace("{{us_upnl}}", "USD {:,.2f} ({:,.1f}%)".format(us_upnl, us_upnl_pct))
     html = html.replace("{{us_upnl_color}}", "#2ecc71" if us_upnl >= 0 else "#e74c3c")
     html = html.replace("{{us_rpnl_color}}", "#2ecc71" if us_rpnl >= 0 else "#e74c3c")
-    html = html.replace("{{us_rpnl}}", "USD {:+,.2f}".format(us_rpnl))
+    html = html.replace("{{us_rpnl}}", "USD {:,.2f}".format(us_rpnl))
     html = html.replace("{{us_wr}}", "{}% ({}W / {}L)".format(us_wr_pct, uw, ul))
     html = html.replace("{{us_wr_color}}", "#2ecc71" if us_wr_pct >= 50 else ("#e74c3c" if (uw+ul) > 0 else "#e6edf3"))
 
@@ -193,10 +193,10 @@ def index():
     uk_wr_pct = round(kw / (kw + kl) * 100) if (kw + kl) > 0 else 0
     html = html.replace("{{uk_cash}}", "GBP {:,.2f}".format(50000 - uk_deployed))
     html = html.replace("{{uk_deployed}}", "GBP {:,.2f}".format(uk_deployed))
-    html = html.replace("{{uk_upnl}}", "GBP {:+,.2f} ({:+.1f}%)".format(uk_upnl, uk_upnl_pct))
+    html = html.replace("{{uk_upnl}}", "GBP {:,.2f} ({:,.1f}%)".format(uk_upnl, uk_upnl_pct))
     html = html.replace("{{uk_upnl_color}}", "#2ecc71" if uk_upnl >= 0 else "#e74c3c")
     html = html.replace("{{uk_rpnl_color}}", "#2ecc71" if uk_rpnl >= 0 else "#e74c3c")
-    html = html.replace("{{uk_rpnl}}", "GBP {:+,.2f}".format(uk_rpnl))
+    html = html.replace("{{uk_rpnl}}", "GBP {:,.2f}".format(uk_rpnl))
     html = html.replace("{{uk_wr}}", "{}% ({}W / {}L)".format(uk_wr_pct, kw, kl))
     html = html.replace("{{uk_wr_color}}", "#2ecc71" if uk_wr_pct >= 50 else ("#e74c3c" if (kw+kl) > 0 else "#e6edf3"))
 
