@@ -73,17 +73,21 @@ def load_json(name, fallback=None):
     except:
         return fallback if fallback is not None else {}
 
-def fmt_money(val, currency="$"):
-    """Format money: positive shows as +$50.00, negative shows as -$50.00"""
+def fmt_money(val, currency="$", pnl=False):
+    """Format money: prices/amounts show $50.00 (no +). P&L shows +$50.00 / -$50.00."""
     if val < 0:
         return f"-{currency}{abs(val):,.2f}"
-    return f"+{currency}{val:,.2f}"
+    if pnl and val > 0:
+        return f"+{currency}{val:,.2f}"
+    return f"{currency}{val:,.2f}"
 
-def fmt_pct(val):
-    """Format percentage: positive shows as +5.2%, negative shows as -5.2%"""
+def fmt_pct(val, pnl=False):
+    """Format percentage: day% shows 5.2%. P&L% shows +5.2% / -5.2%."""
     if val < 0:
         return f"-{abs(val):,.1f}%"
-    return f"+{val:,.1f}%"
+    if pnl and val > 0:
+        return f"+{val:,.1f}%"
+    return f"{val:,.1f}%"
 
 def open_row(p, currency="$"):
     pnl = p["pnl"]
@@ -107,9 +111,9 @@ def open_row(p, currency="$"):
         f"<td>{fmt_money(p['current'], currency)}</td>"
         f"<td>{fmt_money(p['cost'], currency)}</td>"
         f"<td>{fmt_money(p['value'], currency)}</td>"
-        f"<td style='color:{pnl_color}'><strong>{fmt_money(pnl)}</strong></td>"
-        f"<td style='color:{pnl_pct_color}'>{fmt_pct(pnl_pct)}</td>"
-        f"<td style='color:{day_color}'>{fmt_pct(day_val)}</td>"
+        f"<td style='color:{pnl_color}'><strong>{fmt_money(pnl, pnl=True)}</strong></td>"
+        f"<td style='color:{pnl_pct_color}'>{fmt_pct(pnl_pct, pnl=True)}</td>"
+        f"<td style='color:{day_color}'>{fmt_pct(day_val, pnl=True)}</td>"
         f"<td>{fmt_date(p.get('date', ''))}</td>"
         f"<td>—</td>"
         f"</tr>"
@@ -130,8 +134,8 @@ def closed_row(trade, currency="$"):
         f"<td>{fmt_money(t.get('exit_price', t.get('exit', 0)), currency)}</td>"
         f"<td>{fmt_money(t.get('cost_basis', t.get('cost', 0)), currency)}</td>"
         f"<td>{fmt_money(t.get('proceeds', 0), currency)}</td>"
-        f"<td style='color:{pnl_color}'><strong>{fmt_money(pnl)}</strong></td>"
-        f"<td style='color:{pnl_pct_color}'>{fmt_pct(pnl_pct)}</td>"
+        f"<td style='color:{pnl_color}'><strong>{fmt_money(pnl, pnl=True)}</strong></td>"
+        f"<td style='color:{pnl_pct_color}'>{fmt_pct(pnl_pct, pnl=True)}</td>"
         f"<td style='color:#e6edf3'>—</td>"
         f"<td>{fmt_date(t.get('opened', ''))}</td>"
         f"<td>{fmt_date(t.get('closed', ''))}</td>"
@@ -182,8 +186,8 @@ def index():
     html = HTML_TEMPLATE
     html = html.replace("{{timestamp}}", ts)
     html = html.replace("{{comb_deployed}}", "AUD {:,.0f}".format(total_deployed))
-    html = html.replace("{{comb_pnl}}", fmt_money(total_pnl, "AUD "))
-    html = html.replace("{{comb_ret}}", fmt_pct(total_ret))
+    html = html.replace("{{comb_pnl}}", fmt_money(total_pnl, "AUD ", pnl=True))
+    html = html.replace("{{comb_ret}}", fmt_pct(total_ret, pnl=True))
     html = html.replace("{{comb_wr}}", "{}% ({}W / {}L)".format(wr_pct, tw, tl))
     html = html.replace("{{comb_pnl_color}}", "#2ecc71" if total_pnl > 0 else "#e74c3c")
     html = html.replace("{{comb_ret_color}}", "#2ecc71" if total_ret > 0 else "#e74c3c")
@@ -193,10 +197,10 @@ def index():
     us_wr_pct = round(uw / (uw + ul) * 100) if (uw + ul) > 0 else 0
     html = html.replace("{{us_cash}}", fmt_money(50000 - us_deployed, "USD "))
     html = html.replace("{{us_deployed}}", fmt_money(us_deployed, "USD "))
-    html = html.replace("{{us_upnl}}", "{} ({})".format(fmt_money(us_upnl), fmt_pct(us_upnl_pct)))
+    html = html.replace("{{us_upnl}}", "{} ({})".format(fmt_money(us_upnl, pnl=True), fmt_pct(us_upnl_pct, pnl=True)))
     html = html.replace("{{us_upnl_color}}", "#2ecc71" if us_upnl > 0 else "#e74c3c")
     html = html.replace("{{us_rpnl_color}}", "#2ecc71" if us_rpnl > 0 else "#e74c3c")
-    html = html.replace("{{us_rpnl}}", fmt_money(us_rpnl, "USD "))
+    html = html.replace("{{us_rpnl}}", fmt_money(us_rpnl, "USD ", pnl=True))
     html = html.replace("{{us_wr}}", "{}% ({}W / {}L)".format(us_wr_pct, uw, ul))
     html = html.replace("{{us_wr_color}}", "#2ecc71" if us_wr_pct >= 50 else ("#e74c3c" if (uw+ul) > 0 else "#e6edf3"))
 
@@ -204,10 +208,10 @@ def index():
     uk_wr_pct = round(kw / (kw + kl) * 100) if (kw + kl) > 0 else 0
     html = html.replace("{{uk_cash}}", fmt_money(50000 - uk_deployed, "GBP "))
     html = html.replace("{{uk_deployed}}", fmt_money(uk_deployed, "GBP "))
-    html = html.replace("{{uk_upnl}}", "{} ({})".format(fmt_money(uk_upnl), fmt_pct(uk_upnl_pct)))
+    html = html.replace("{{uk_upnl}}", "{} ({})".format(fmt_money(uk_upnl, pnl=True), fmt_pct(uk_upnl_pct, pnl=True)))
     html = html.replace("{{uk_upnl_color}}", "#2ecc71" if uk_upnl > 0 else "#e74c3c")
     html = html.replace("{{uk_rpnl_color}}", "#2ecc71" if uk_rpnl > 0 else "#e74c3c")
-    html = html.replace("{{uk_rpnl}}", fmt_money(uk_rpnl, "GBP "))
+    html = html.replace("{{uk_rpnl}}", fmt_money(uk_rpnl, "GBP ", pnl=True))
     html = html.replace("{{uk_wr}}", "{}% ({}W / {}L)".format(uk_wr_pct, kw, kl))
     html = html.replace("{{uk_wr_color}}", "#2ecc71" if uk_wr_pct >= 50 else ("#e74c3c" if (kw+kl) > 0 else "#e6edf3"))
 
