@@ -77,17 +77,17 @@ def load_json(name, fallback=None):
         return fallback if fallback is not None else {}
 
 def fmt_money(val, currency="$", pnl=False):
-    """Format money: prices/amounts show $50.00 (no +). P&L shows +$50.00 / -$50.00."""
+    """Format money: AUD $50.00, AUD -$50.00. PnL adds + prefix for gains."""
     if abs(val) < 0.005:
         val = 0.0
     if val < 0:
-        return f"-{currency}{abs(val):,.2f}"
+        return f"{currency}-${abs(val):,.2f}"
     if pnl and val > 0:
-        return f"+{currency}{val:,.2f}"
-    return f"{currency}{val:,.2f}"
+        return f"{currency}+${val:,.2f}"
+    return f"{currency}${val:,.2f}"
 
 def fmt_pct(val, pnl=False):
-    """Format percentage: day% shows 5.2%. P&L% shows +5.2% / -5.2%."""
+    """Format percentage: 5.2%. PnL shows +5.2% / -5.2%."""
     if abs(val) < 0.05:
         val = 0.0
     if val < 0:
@@ -192,7 +192,7 @@ def index():
 
     html = HTML_TEMPLATE
     html = html.replace("{{timestamp}}", ts)
-    html = html.replace("{{comb_deployed}}", "AUD {:,.2f}".format(total_deployed))
+    html = html.replace("{{comb_deployed}}", fmt_money(total_deployed, "AUD"))
     html = html.replace("{{comb_pnl}}", fmt_money(total_pnl, "AUD ", pnl=True))
     html = html.replace("{{comb_ret}}", fmt_pct(total_ret, pnl=True))
     html = html.replace("{{comb_wr}}", "{}% ({}W / {}L)".format(wr_pct, tw, tl))
