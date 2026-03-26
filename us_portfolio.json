@@ -1,5 +1,24 @@
 {
-  "positions": {},
-  "cash": 50000.0,
+  "positions": {
+    "OKE": {
+      "ticker": "OKE",
+      "qty": 2,
+      "entry_price": 92.12,
+      "date_added": "2026-03-26T10:37:38.848966+11:00"
+    },
+    "IMMX": {
+      "ticker": "IMMX",
+      "qty": 28,
+      "entry_price": 8.91,
+      "date_added": "2026-03-26T10:37:38.852997+11:00"
+    },
+    "FUN": {
+      "ticker": "FUN",
+      "qty": 14,
+      "entry_price": 17.27,
+      "date_added": "2026-03-26T10:37:38.853514+11:00"
+    }
+  },
+  "cash": 49324.50000640869,
   "currency": "USD"
 }
