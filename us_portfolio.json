@@ -17,8 +17,38 @@
       "qty": 14,
       "entry_price": 17.27,
       "date_added": "2026-03-26T10:37:38.853514+11:00"
+    },
+    "LIND": {
+      "ticker": "LIND",
+      "qty": 13,
+      "entry_price": 18.58,
+      "date_added": "2026-03-26T12:21:13.208231+11:00",
+      "stop": 15.79,
+      "score": 1.0,
+      "category": "8-k",
+      "thesis": "8-K items: 5.02 | item=5 surprise=0 vol=569,135"
+    },
+    "RXRX": {
+      "ticker": "RXRX",
+      "qty": 78,
+      "entry_price": 3.17,
+      "date_added": "2026-03-26T12:21:13.208833+11:00",
+      "stop": 2.69,
+      "score": 1.0,
+      "category": "8-k",
+      "thesis": "8-K items: 5.02 | item=5 surprise=0 vol=13,461,409"
+    },
+    "S": {
+      "ticker": "S",
+      "qty": 18,
+      "entry_price": 13.36,
+      "date_added": "2026-03-26T12:21:13.209435+11:00",
+      "stop": 11.36,
+      "score": 1.0,
+      "category": "8-k",
+      "thesis": "8-K items: 5.02 | item=5 surprise=0 vol=7,144,380"
     }
   },
-  "cash": 49324.50000640869,
+  "cash": 48595.22002166748,
   "currency": "USD"
 }
