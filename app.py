@@ -74,25 +74,25 @@ def load_json(name, fallback=None):
         return fallback if fallback is not None else {}
 
 def fmt_money(val, currency="$"):
-    """Format money: negative shows as -$50.00 not $-50.00"""
+    """Format money: positive shows as +$50.00, negative shows as -$50.00"""
     if val < 0:
         return f"-{currency}{abs(val):,.2f}"
-    return f"{currency}{val:,.2f}"
+    return f"+{currency}{val:,.2f}"
 
 def fmt_pct(val):
-    """Format percentage: negative shows as -5.2%"""
+    """Format percentage: positive shows as +5.2%, negative shows as -5.2%"""
     if val < 0:
         return f"-{abs(val):,.1f}%"
-    return f"{val:,.1f}%"
+    return f"+{val:,.1f}%"
 
 def open_row(p, currency="$"):
     pnl = p["pnl"]
-    pnl_color = "#2ecc71" if pnl > 0 else "#e74c3c"
+    pnl_color = "#2ecc71" if pnl > 0 else ("#e74c3c" if pnl < 0 else "#8b949e")
     
     day_val = p.get("day", 0)
     day_color = "#2ecc71" if day_val > 0 else ("#e74c3c" if day_val < 0 else "#8b949e")
     pnl_pct = p.get("pnl_pct", 0)
-    pnl_pct_color = "#2ecc71" if pnl_pct > 0 else "#e74c3c"
+    pnl_pct_color = "#2ecc71" if pnl_pct > 0 else ("#e74c3c" if pnl_pct < 0 else "#8b949e")
     if pnl > 0:
         arrow = '<span style="color:#2ecc71;font-weight:bold">&#9650;</span>'
     elif pnl < 0:
@@ -118,9 +118,9 @@ def open_row(p, currency="$"):
 def closed_row(trade, currency="$"):
     t = trade
     pnl = t.get("pnl", 0)
-    pnl_color = "#2ecc71" if pnl > 0 else "#e74c3c"
+    pnl_color = "#2ecc71" if pnl > 0 else ("#e74c3c" if pnl < 0 else "#8b949e")
     pnl_pct = t.get("pnl_pct", 0)
-    pnl_pct_color = "#2ecc71" if pnl_pct > 0 else "#e74c3c"
+    pnl_pct_color = "#2ecc71" if pnl_pct > 0 else ("#e74c3c" if pnl_pct < 0 else "#8b949e")
     emoji = "&#128994;" if pnl > 0 else "&#128308;" if pnl < 0 else "&#9898;"
     return (
         f"<tr class='closed-row'>"
