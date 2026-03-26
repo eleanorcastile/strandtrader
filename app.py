@@ -75,12 +75,12 @@ def load_json(name, fallback=None):
 
 def open_row(p, currency="$"):
     pnl = p["pnl"]
-    pnl_color = "#2ecc71" if pnl >= 0 else "#e74c3c"
-    pnl_sign = "+" if pnl >= 0 else ""
+    pnl_color = "#2ecc71" if pnl > 0 else "#e74c3c"
+    pnl_sign = "+" if pnl > 0 else ""
     day_val = p.get("day", 0)
-    day_color = "#2ecc71" if day_val >= 0 else "#e74c3c"
+    day_color = "#2ecc71" if day_val > 0 else ("#e74c3c" if day_val < 0 else "#8b949e")
     pnl_pct = p.get("pnl_pct", 0)
-    pnl_pct_color = "#2ecc71" if pnl_pct >= 0 else "#e74c3c"
+    pnl_pct_color = "#2ecc71" if pnl_pct > 0 else "#e74c3c"
     if pnl > 0:
         arrow = '<span style="color:#2ecc71;font-weight:bold">&#9650;</span>'
     elif pnl < 0:
@@ -106,10 +106,10 @@ def open_row(p, currency="$"):
 def closed_row(trade, currency="$"):
     t = trade
     pnl = t.get("pnl", 0)
-    pnl_color = "#2ecc71" if pnl >= 0 else "#e74c3c"
-    pnl_sign = "+" if pnl >= 0 else ""
+    pnl_color = "#2ecc71" if pnl > 0 else "#e74c3c"
+    pnl_sign = "+" if pnl > 0 else ""
     pnl_pct = t.get("pnl_pct", 0)
-    pnl_pct_color = "#2ecc71" if pnl_pct >= 0 else "#e74c3c"
+    pnl_pct_color = "#2ecc71" if pnl_pct > 0 else "#e74c3c"
     emoji = "&#128994;" if pnl > 0 else "&#128308;" if pnl < 0 else "&#9898;"
     return (
         f"<tr class='closed-row'>"
