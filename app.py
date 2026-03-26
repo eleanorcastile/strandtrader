@@ -84,7 +84,7 @@ def fmt_money(val, currency="$", pnl=False):
     sign = ""
     if val < 0:
         sign = "-"
-    elif pnl and val > 0:
+    elif pnl and val >= 0:
         sign = "+"
     return f"{sign}{currency}{abs(val):,.2f}"
 
@@ -95,7 +95,7 @@ def fmt_pct(val, pnl=False):
         val = 0.0
     if val < 0:
         return f"-{abs(val):,.1f}%"
-    if pnl and val > 0:
+    if pnl and val >= 0:
         return f"+{val:,.1f}%"
     return f"{val:,.1f}%"
 
