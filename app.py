@@ -207,7 +207,7 @@ def index():
     us_wr_pct = round(uw / (uw + ul) * 100) if (uw + ul) > 0 else 0
     html = html.replace("{{us_cash}}", fmt_money(50000 - us_deployed, "$"))
     html = html.replace("{{us_deployed}}", fmt_money(us_deployed, "$"))
-    html = html.replace("{{us_upnl}}", "{} ({})".format(fmt_money(us_upnl, pnl=True), fmt_pct(us_upnl_pct, pnl=True)))
+    html = html.replace("{{us_upnl}}", "{} ({})".format(fmt_money(us_upnl, "$", pnl=True), fmt_pct(us_upnl_pct, pnl=True)))
     html = html.replace("{{us_upnl_color}}", "#2ecc71" if us_upnl > 0 else "#e74c3c")
     html = html.replace("{{us_rpnl_color}}", "#2ecc71" if us_rpnl > 0 else "#e74c3c")
     html = html.replace("{{us_rpnl}}", fmt_money(us_rpnl, "$", pnl=True))
@@ -218,7 +218,7 @@ def index():
     uk_wr_pct = round(kw / (kw + kl) * 100) if (kw + kl) > 0 else 0
     html = html.replace("{{uk_cash}}", fmt_money(50000 - uk_deployed, "£"))
     html = html.replace("{{uk_deployed}}", fmt_money(uk_deployed, "£"))
-    html = html.replace("{{uk_upnl}}", "{} ({})".format(fmt_money(uk_upnl, pnl=True), fmt_pct(uk_upnl_pct, pnl=True)))
+    html = html.replace("{{uk_upnl}}", "{} ({})".format(fmt_money(uk_upnl, "£", pnl=True), fmt_pct(uk_upnl_pct, pnl=True)))
     html = html.replace("{{uk_upnl_color}}", "#2ecc71" if uk_upnl > 0 else "#e74c3c")
     html = html.replace("{{uk_rpnl_color}}", "#2ecc71" if uk_rpnl > 0 else "#e74c3c")
     html = html.replace("{{uk_rpnl}}", fmt_money(uk_rpnl, "£", pnl=True))
