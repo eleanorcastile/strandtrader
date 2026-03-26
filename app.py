@@ -8,13 +8,16 @@ BASE = Path(__file__).parent
 HTML_TEMPLATE = (BASE / "index.html").read_text(encoding="utf-8")
 
 def get_fx():
+    """Returns (USD_to_AUD, GBP_to_AUD) conversion rates."""
     try:
         a = yf.Ticker("AUDUSD=X").history(period="1d", interval="1d")
         g = yf.Ticker("GBPAUD=X").history(period="1d", interval="1d")
         audusd = float(a.iloc[-1]["Close"]) if not a.empty else 0.77
         gbpaud = float(g.iloc[-1]["Close"]) if not g.empty else 0.52
-        return round(1/audusd, 4), round(gbpaud, 4)  # usd→aud, gbp→aud
+        # GBPAUD = price of 1 AUD in GBP. GBP to AUD = 1 / GBPAUD
+        return round(1/audusd, 4), round(1/gbpaud, 4)
     except:
+        return 1.30, 1.92  # fallback: USD→AUD, GBP→AUD
         return 1.56, 1.92
 
 def get_price(ticker):
@@ -189,7 +192,7 @@ def index():
 
     html = HTML_TEMPLATE
     html = html.replace("{{timestamp}}", ts)
-    html = html.replace("{{comb_deployed}}", "AUD {:,.0f}".format(total_deployed))
+    html = html.replace("{{comb_deployed}}", "AUD {:,.2f}".format(total_deployed))
     html = html.replace("{{comb_pnl}}", fmt_money(total_pnl, "AUD ", pnl=True))
     html = html.replace("{{comb_ret}}", fmt_pct(total_ret, pnl=True))
     html = html.replace("{{comb_wr}}", "{}% ({}W / {}L)".format(wr_pct, tw, tl))
