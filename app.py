@@ -1,6 +1,7 @@
 import os, json, time, yfinance as yf
 from pathlib import Path
 from datetime import datetime
+import pytz
 from flask import Flask
 
 app = Flask(__name__)
@@ -199,7 +200,7 @@ def index():
     tw, tl = uw + kw, ul + kl
     wr_pct = round(tw / (tw + tl) * 100) if (tw + tl) > 0 else 0
 
-    ts = datetime.now().strftime("%A, %d/%m/%Y %H:%M")
+    ts = datetime.now(pytz.timezone("Australia/Sydney")).strftime("%A, %d/%m/%Y %H:%M")
 
     html = HTML_TEMPLATE
     html = html.replace("{{timestamp}}", ts)
