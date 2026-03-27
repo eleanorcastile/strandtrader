@@ -288,6 +288,23 @@ def index():
     html = html.replace("{{us_closed_rows}}", closed_rows(us_history.get("trades", []), "$"))
     html = html.replace("{{uk_closed_rows}}", closed_rows(uk_history.get("trades", []), "\u00a3"))
 
+    # ── AU tab replacements ────────────────────────────────────────────
+    au_wr_pct = round(aw / (aw + al) * 100) if (aw + al) > 0 else 0
+    html = html.replace("{{au_wr_color}}", "#2ecc71" if au_wr_pct >= 50 else ("#e74c3c" if (aw+al) > 0 else "#e6edf3"))
+    html = html.replace("{{au_cash}}", fmt_money(50000 - au_deployed, "AUD $"))
+    html = html.replace("{{au_deployed}}", fmt_money(au_deployed, "AUD $"))
+    html = html.replace("{{au_upnl_color}}", "#2ecc71" if au_upnl > 0 else ("#e74c3c" if au_upnl < 0 else "#8b949e"))
+    html = html.replace("{{au_upnl}}", "{} ({})".format(fmt_money(au_upnl, "AUD $", pnl=True), fmt_pct((au_upnl / au_deployed * 100) if au_deployed else 0, pnl=True)))
+    html = html.replace("{{au_rpnl_color}}", "#2ecc71" if au_rpnl > 0 else ("#e74c3c" if au_rpnl < 0 else "#8b949e"))
+    html = html.replace("{{au_rpnl}}", fmt_money(au_rpnl, "AUD $", pnl=True))
+    html = html.replace("{{au_wr}}", "{}% ({}W / {}L)".format(au_wr_pct, aw, al))
+    html = html.replace("{{asx200_color}}", asx200_color)
+    html = html.replace("{{allords_color}}", allords_color)
+    html = html.replace("{{asx200_day}}", asx200_day)
+    html = html.replace("{{allords_day}}", allords_day)
+    html = html.replace("{{au_open_rows}}", open_rows(sorted(au_enr, key=lambda p: p["pnl"], reverse=True), "AUD $"))
+    html = html.replace("{{au_closed_rows}}", closed_rows(au_history.get("trades", []), "AUD $"))
+
     return html
 
 if __name__ == "__main__":
