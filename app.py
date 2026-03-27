@@ -31,6 +31,23 @@ def get_price(ticker):
     except:
         return None
 
+
+def get_day_pct(ticker):
+    """Returns (day_pct_str, color) e.g. ('+1.23%', '#2ecc71')"""
+    try:
+        tk = yf.Ticker(ticker)
+        h = tk.history(period="5d", interval="1d")
+        if h.empty or len(h) < 2:
+            return "N/A", "#8b949e"
+        cur  = float(h.iloc[-1]["Close"])
+        prev = float(h.iloc[-2]["Close"])
+        pct  = (cur - prev) / prev * 100 if prev else 0
+        sign = "+" if pct >= 0 else ""
+        color = "#2ecc71" if pct > 0 else ("#e74c3c" if pct < 0 else "#8b949e")
+        return f"{sign}{pct:.2f}%", color
+    except Exception:
+        return "N/A", "#8b949e"
+
 def fmt_date(s):
     if not s:
         return "—"
@@ -219,9 +236,29 @@ def index():
     html = html.replace("{{us_upnl}}", "{} ({})".format(fmt_money(us_upnl, "$", pnl=True), fmt_pct(us_upnl_pct, pnl=True)))
     html = html.replace("{{us_upnl_color}}", "#2ecc71" if us_upnl > 0 else ("#e74c3c" if us_upnl < 0 else "#8b949e"))
     html = html.replace("{{us_rpnl_color}}", "#2ecc71" if us_rpnl > 0 else ("#e74c3c" if us_rpnl < 0 else "#8b949e"))
+
+    # ── Index Day % ─────────────────────────────────────────────────────
+    rut_day,     rut_color      = get_day_pct("^RUT")
+    sp600_day,   sp600_color    = get_day_pct("^SP600")
+    ftse250_day, ftse250_color  = get_day_pct("^FTMC")
+    ftsesc_day,  ftsesc_color   = get_day_pct("^FTSC")
+    # ─────────────────────────────────────────────────────────────────────
+
+    
     html = html.replace("{{us_rpnl}}", fmt_money(us_rpnl, "$", pnl=True))
     html = html.replace("{{us_wr}}", "{}% ({}W / {}L)".format(us_wr_pct, uw, ul))
     html = html.replace("{{us_wr_color}}", "#2ecc71" if us_wr_pct >= 50 else ("#e74c3c" if (uw+ul) > 0 else "#e6edf3"))
+
+    html = html.replace("{{rut_day}}",        rut_day)
+    html = html.replace("{{rut_color}}",      rut_color)
+    html = html.replace("{{sp600_day}}",       sp600_day)
+    html = html.replace("{{sp600_color}}",   sp600_color)
+    html = html.replace("{{ftse250_day}}",    ftse250_day)
+    html = html.replace("{{ftse250_color}}", ftse250_color)
+    html = html.replace("{{ftsesc_day}}",     ftsesc_day)
+    html = html.replace("{{ftsesc_color}}",  ftsesc_color)
+
+    
 
     uk_upnl_pct = (uk_upnl / uk_deployed * 100) if uk_deployed else 0
     uk_wr_pct = round(kw / (kw + kl) * 100) if (kw + kl) > 0 else 0
