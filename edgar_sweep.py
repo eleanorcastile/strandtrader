@@ -279,6 +279,33 @@ def rule_based_score(filing, price, vol, pct, habit):
 
 # ─── MAIN ────────────────────────────────────────────────────────────────────
 
+def fill_approved(tickers):
+    """Fill approved positions AFTER research. Reads from candidates.json."""
+    import json as _json
+    global DRY_RUN
+    DRY_RUN = False  # Enable actual fills
+    try:
+        with open("us_candidates.json") as f:
+            data = _json.load(f)
+        all_cands = {c["ticker"]: c for c in data.get("all_candidates", data.get("candidates", []))}
+    except Exception as e:
+        log(f"No candidates file: {e}")
+        DRY_RUN = True
+        return []
+    filled = []
+    for t in tickers:
+        c = all_cands.get(t)
+        if not c:
+            log(f"  {t}: not in candidates file")
+            continue
+        log(f"FILL APPROVED: {t} score={c.get('avg_score')} items={c.get('items',[])}")
+        place_order(c)
+        filled.append(t)
+    DRY_RUN = True  # Back to scan-only
+    return filled
+
+
+
 def main():
     log(f"=== EDGAR SWEEP — {datetime.now().strftime('%Y-%m-%d %H:%M ET')} ===")
 
@@ -381,7 +408,7 @@ def main():
 
     # Save report
     report = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now().isoformat()(),
         "candidates": candidates,
         "orders_placed": orders_placed,
     }
