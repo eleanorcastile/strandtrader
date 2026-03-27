@@ -198,6 +198,8 @@ def index():
     au_history   = load_json("au_history.json", {"trades": [], "summary": {"wins": 0, "losses": 0}})
 
     USD, GBP = get_fx()
+    AUD = 1.0  # base currency
+    AUD = 1.0  # base currency
     us_enr = enrich(us_portfolio.get("positions", {}))
     uk_enr = enrich(uk_portfolio.get("positions", {}))
     au_enr = enrich(au_portfolio.get("positions", {}))
