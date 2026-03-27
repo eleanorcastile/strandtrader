@@ -1,0 +1,24 @@
+{
+  "positions": {
+    "TLX.AX": {
+      "qty": 18,
+      "entry_price": 13.649999618530273,
+      "date_added": "2026-03-27T22:22:47.045441",
+      "stop": 11.602,
+      "score": 9,
+      "category": "trading_update",
+      "thesis": "trading_update (revenue)"
+    },
+    "LYC.AX": {
+      "qty": 12,
+      "entry_price": 20.079999923706055,
+      "date_added": "2026-03-27T22:22:47.045441",
+      "stop": 17.068,
+      "score": 8,
+      "category": "partnership",
+      "thesis": "partnership (partnership)"
+    }
+  },
+  "cash": 49513.340000000004,
+  "currency": "AUD"
+}
