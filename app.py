@@ -194,27 +194,35 @@ def index():
     us_history   = load_json("us_history.json", {"trades": [], "summary": {"wins": 0, "losses": 0}})
     uk_portfolio = load_json("uk_portfolio.json", {"positions": {}, "cash": 50000})
     uk_history   = load_json("uk_history.json", {"trades": [], "summary": {"wins": 0, "losses": 0}})
+    au_portfolio = load_json("au_portfolio.json", {"positions": {}, "cash": 50000, "currency": "AUD"})
+    au_history   = load_json("au_history.json", {"trades": [], "summary": {"wins": 0, "losses": 0}})
 
     USD, GBP = get_fx()
     us_enr = enrich(us_portfolio.get("positions", {}))
     uk_enr = enrich(uk_portfolio.get("positions", {}))
+    au_enr = enrich(au_portfolio.get("positions", {}))
 
     us_deployed = sum(p["cost"] for p in us_enr)
     uk_deployed = sum(p["cost"] for p in uk_enr)
+    au_deployed = sum(p["cost"] for p in au_enr)
     us_upnl = sum(p["pnl"] for p in us_enr)
     uk_upnl = sum(p["pnl"] for p in uk_enr)
+    au_upnl = sum(p["pnl"] for p in au_enr)
     us_rpnl = sum(t["pnl"] for t in us_history.get("trades", []))
     uk_rpnl = sum(t["pnl"] for t in uk_history.get("trades", []))
+    au_rpnl = sum(t["pnl"] for t in au_history.get("trades", []))
 
-    total_deployed = us_deployed * USD + uk_deployed * GBP
-    total_pnl = (us_upnl + us_rpnl) * USD + (uk_upnl + uk_rpnl) * GBP
+    total_deployed = us_deployed * USD + uk_deployed * GBP + au_deployed * AUD
+    total_pnl = (us_upnl + us_rpnl) * USD + (uk_upnl + uk_rpnl) * GBP + (au_upnl + au_rpnl) * AUD
     total_ret = (total_pnl / total_deployed * 100) if total_deployed else 0
 
     uw = us_history.get("summary", {}).get("wins", 0)
     ul = us_history.get("summary", {}).get("losses", 0)
     kw = uk_history.get("summary", {}).get("wins", 0)
     kl = uk_history.get("summary", {}).get("losses", 0)
-    tw, tl = uw + kw, ul + kl
+    aw = au_history.get("summary", {}).get("wins", 0)
+    al = au_history.get("summary", {}).get("losses", 0)
+    tw, tl = uw + kw + aw, ul + kl + al
     wr_pct = round(tw / (tw + tl) * 100) if (tw + tl) > 0 else 0
 
     ts = datetime.now(pytz.timezone("Australia/Sydney")).strftime("%A, %d/%m/%Y %H:%M")
@@ -242,6 +250,8 @@ def index():
     sp600_day,   sp600_color    = get_day_pct("^SP600")
     ftse250_day, ftse250_color  = get_day_pct("^FTMC")
     ftsesc_day,  ftsesc_color   = get_day_pct("^FTSC")
+    asx200_day,  asx200_color  = get_day_pct("^AXTJ")
+    allords_day,  allords_color  = get_day_pct("^AORD")
     # ─────────────────────────────────────────────────────────────────────
 
     
