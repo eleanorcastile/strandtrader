@@ -279,7 +279,34 @@ def rule_based_score(filing, price, vol, pct, habit):
 
 # ─── MAIN ────────────────────────────────────────────────────────────────────
 
-def main():
+def fill_approved(tickers):
+    """Fill approved positions AFTER research. Reads from candidates.json."""
+    import json as _json
+    global DRY_RUN
+    DRY_RUN = False  # Enable actual fills
+    try:
+        with open("us_candidates.json") as f:
+            data = _json.load(f)
+        all_cands = {c["ticker"]: c for c in data.get("all_candidates", data.get("candidates", []))}
+    except Exception as e:
+        log(f"No candidates file: {e}")
+        DRY_RUN = True
+        return []
+    filled = []
+    for t in tickers:
+        c = all_cands.get(t)
+        if not c:
+            log(f"  {t}: not in candidates file")
+            continue
+        log(f"FILL APPROVED: {t} score={c.get('avg_score')} items={c.get('items',[])}")
+        place_order(c)
+        filled.append(t)
+    DRY_RUN = True  # Back to scan-only
+    return filled
+
+
+
+def scan_only():
     log(f"=== EDGAR SWEEP — {datetime.now().strftime('%Y-%m-%d %H:%M ET')} ===")
 
     portfolio = load_portfolio()
@@ -364,32 +391,20 @@ def main():
     for c in watches:
         print(f"  {c['ticker']} | {c['company'][:50]} | score={c['avg_score']}")
 
-    # 5. Place simulated orders (write to local portfolio)
-    orders_placed = []
-    for c in buys[:MAX_ORDERS]:
-        t   = c["ticker"]
-        p   = c["price"]
-        qty = max(1, int(MAX_POSITION / p))
-        cost = qty * p
-        if cost > cash:
-            log(f"  SKIP {t}: ${cost:.2f} > cash ${cash:.2f}")
-            continue
-        add_position(t, qty, p)
-        orders_placed.append(t)
-        cash -= cost
-        log(f"ORDER: {t} | {qty} sh @ ${p:.2f} | ~${cost:.2f} | ✅ added to portfolio")
-
-    # Save report
+    # Save candidates to JSON for research agent
     report = {
         "timestamp": datetime.now().isoformat(),
         "candidates": candidates,
-        "orders_placed": orders_placed,
+        "all_candidates": all_candidates,
+        "orders_placed": [],
     }
-    with open("/Users/eleanor/.openclaw/workspace-soros/strandtrader/last_sweep.json", "w") as f:
+    with open("/Users/eleanor/.openclaw/workspace-soros/strandtrader/us_candidates.json", "w") as f:
         json.dump(report, f, indent=2)
 
-    log(f"=== DONE — {len(orders_placed)} positions added: {orders_placed} ===")
+    log(f"=== SCAN COMPLETE — {len(buys)} BUY | {len(watches)} WATCH | {len(skipped)} SKIP ===")
+    log(f"   Candidates saved to us_candidates.json")
+    log(f"   NO POSITIONS PLACED — research phase next")
 
 
 if __name__ == "__main__":
-    main()
+    scan_only()
