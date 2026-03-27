@@ -77,15 +77,23 @@ def load_json(name, fallback=None):
         return fallback if fallback is not None else {}
 
 def fmt_money(val, currency="$", pnl=False):
-    """Format money: $50.00, -$50.00, +$50.00 (pnl).
-    currency="$" for USD, "£" for GBP, "AUD $" for AUD."""
+    """Format money. 
+    USD: $50.00, -$50.00, +$50.00
+    GBP: £50.00, -£50.00, +£50.00  
+    AUD: AUD $50.00, AUD -$50.00, AUD +$50.00
+    """
     if abs(val) < 0.005:
         val = 0.0
-    sign = ""
+    # Determine sign
     if val < 0:
         sign = "-"
     elif pnl and val >= 0:
         sign = "+"
+    else:
+        sign = ""
+    # For AUD $xxx format: sign goes after currency (AUD -$12.71)
+    if currency.startswith("AUD") and sign:
+        return f"AUD {sign}${abs(val):,.2f}"
     return f"{sign}{currency}{abs(val):,.2f}"
 
 
